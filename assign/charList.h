@@ -11,14 +11,14 @@ public:
 	~CharDLL();								// destructor, frees all associated memory
 	
 private:	
-	char c_;								// character data held by node
+	char element_;							// character data held by node
 	CharDLL* prev_;							// pointer to previous node
 	CharDLL* next_;							// pointer to following node
 };
 
 
 class CharList {
-public:		
+public:	
 	CharList(string s);						// constructor, initializes a list with contents of 's'
 	~CharList();							// destructor, frees all associated memory
 
