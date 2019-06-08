@@ -6,8 +6,6 @@
 
 #include "charList.h"
 
-using namespace std;
-
 // CharDLL methods
 
 CharDLL::CharDLL() {
@@ -66,6 +64,10 @@ void CharList::Append(char c, char d) {
 
 
 void CharList::Append(char c, char d, int n) {
+	if (n < 1) {
+		cout << "invalid index, requires n >= 1" << endl;
+		return;
+	}
 	CharDLL* new_char = new CharDLL;
 	new_char->element_ = c;
 	CharDLL* current_node = head_->next_;
@@ -74,7 +76,7 @@ void CharList::Append(char c, char d, int n) {
 	while (current_node != tail_ && count < n) {
 		if (current_node->element_ == d) {
 			count++;
-			if (count == n) {break;}
+			if (count == n) {break;}				// so that current_node is 'd', not the node after
 		}
 		current_node = current_node->next_;
 	}
@@ -107,8 +109,8 @@ CharList::CharList(string str) {
 CharList::~CharList() {
 	while (!Empty())
 	{
-		CharDLL* remove_node = head_->next_;  // unlink the first node 
-		head_->next_ = remove_node->next_;    // link the rest of the list back to the head sentinel
+		CharDLL* remove_node = head_->next_;  // unlink the first node and then link 
+		head_->next_ = head_->next_->next_;   // the rest of the list back to the head sentinel
 		delete remove_node;
 	}
 	// now all internal nodes are deleted, so delete sentinel nodes
