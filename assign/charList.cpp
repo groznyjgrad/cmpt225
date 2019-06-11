@@ -120,6 +120,11 @@ CharList::~CharList() {
 
 string CharList::ToString() {
 	string list_as_string;
+	if (head_->next_ == tail_)
+	{
+		return "(list is empty)";
+	}
+
 	CharDLL* current_node = head_->next_;
 
 	while (current_node != tail_)     // traverse list nodes and build string

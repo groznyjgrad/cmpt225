@@ -74,110 +74,82 @@ int main() {
 	if (typical_string->ToString() == "abdpcbapczc") { typical_string_passed++; }
 	else { cout << "Error" << endl;}
 
-	if (typical_string_passed == num_of_tests) {cout << "typical_string passed all tests" << endl;}
-	else {cout << "typical_string failed one or more tests" << endl;}
-
 	// Tests on one_letter
-	cout << "call one_letter->Size(), expect: 1" << endl;
-	cout << one_letter->Size() << endl;
 	if (one_letter->Size() == 1) { one_letter_passed++; }
 	else { cout << "Error" << endl;}
-
-	cout << "call one_letter->ToString(), expect: \"s\"" << endl;
-	cout << one_letter->ToString() << endl;
+;
 	if (one_letter->ToString() == "s") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 
-	cout << "call one_letter->Insert('x'), expect: \"xs\"" << endl;
 	one_letter->Insert('x');
-	cout << one_letter->ToString() << endl;
 	if (one_letter->ToString() == "xs") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 
-	cout << "call one_letter->Remove('x'), expect \"s\"" << endl;
 	one_letter->Remove('x');
-	cout << one_letter->ToString() << endl;
 	if (one_letter->ToString() == "s") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 
-	cout << "call one_letter->Remove('x'), expect \"s\"" << endl;
 	one_letter->Remove('x'); // should not affect string
-	cout << one_letter->ToString() << endl;
 	if (one_letter->ToString() == "s") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 
-	cout << "call one_letter->Remove('d', 2), expect \"s\"" << endl;
 	one_letter->Remove('s',2); // should not affect string
-	cout << one_letter->ToString() << endl;
 	if (one_letter->ToString() == "s") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 
-	cout << "call one_letter->Insert('d','s'), expect: \"ds\"" << endl;
 	one_letter->Insert('d','s');
-	cout << one_letter->ToString() << endl;
 	if (one_letter->ToString() == "ds") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 	one_letter->Remove('d');
 
-	cout << "call one_letter->Insert('d','c'), expect: \"sd\"" << endl;
 	one_letter->Insert('d','c'); // should insert EOL
-	cout << one_letter->ToString() << endl;
 	if (one_letter->ToString() == "sd") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 	one_letter->Remove('d');
 
-	cout << "call one_letter->Insert('b','s', 1), expect: \"bs\"" << endl;
 	one_letter->Insert('b','s',1);
-	cout << one_letter->ToString() << endl;
 	if (one_letter->ToString() == "bs") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 	one_letter->Remove('b');
 
-	cout << "call one_letter->Insert('b','s', 2), expect: \"sb\"" << endl;
 	one_letter->Insert('b','s',2); // should insert EOL
-	cout << one_letter->ToString() << endl;
 	if (one_letter->ToString() == "sb") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 	one_letter->Remove('b');
 
-	cout << "call one_letter->Append('p'), expect: \"sp\"" << endl;
 	one_letter->Append('p');
-	cout << one_letter->ToString() << endl;
 	if (one_letter->ToString() == "sp") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 	one_letter->Remove('p');
 
-	cout << "call one_letter->Append('c', 'p', 2), expect: \"sc\"" << endl;
-	one_letter->Append('c','p',);
-	cout << one_letter->ToString() << endl;
+	one_letter->Append('c','p');
 	if (one_letter->ToString() == "sc") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 	one_letter->Remove('c');
 
-	cout << "call one_letter->Append('c', 'p', 3), expect: \"sc\"" << endl;
 	one_letter->Append('c','p',3);
-	cout << one_letter->ToString() << endl;
 	if (one_letter->ToString() == "sc") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 	one_letter->Remove('c');
 
-	cout << "call one_letter->Remove('s', 2), expect \"s\"" << endl;
 	one_letter->Remove('s',2);
-	cout << one_letter->ToString() << endl;
 	if (one_letter->ToString() == "s") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 
-	cout << "call one_letter->Remove('s', 1), expect \"\"" << endl;
 	one_letter->Remove('s',1);
-	cout << one_letter->ToString() << endl;
+	if (one_letter->ToString() == "(list is empty)") { one_letter_passed++; }
+	else { cout << "Error" << endl;}
+
+	one_letter->Insert('s');
 	if (one_letter->ToString() == "s") { one_letter_passed++; }
 	else { cout << "Error" << endl;}
 
-	// What happens if we remove the single character in a one element list and then call ToString()?
+	// Test results
 
-	if (one_letter_passed == num_of_tests) {cout << "one_letter passed all tests" << endl;}
-	else {cout << "one_letter failed one or more tests" << endl;}
-
+	if (typical_string_passed + one_letter_passed == num_of_tests*2) {
+		cout << "passed" << endl;
+	}
+	else {cout << "failed" << endl;}
 
 	// Free memory
 	delete typical_string;
