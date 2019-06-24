@@ -1,0 +1,6 @@
+The average length of a word is:
+
+
+The average number of character comparisons performed by this function is:
+
+
