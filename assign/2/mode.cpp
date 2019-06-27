@@ -14,17 +14,27 @@ using namespace std;
 // Return value:
 //  return the mode
 //
-long mode (long *arr, int n) {
-  // TO DO:: Fill in this function.
 
-  return -1;
+long getMode (long* set_of_ints, int num_elements) {
+	// Find maximum value of the input array.
+	int max_value = 0;
+	for (int i = 0; i < num_elements; ++i) {
+		if (set_of_ints[i] > max_value) max_value = set_of_ints[i];
+	}
+
+	// Use an array to count the frequency of each integer number.
+	int countFrequency[max_value];
+	for (int i = 0; i < num_elements; ++i) {
+		int num = set_of_ints[i];
+		++countFrequency[num];
+	}
+
+	long mode = 0;
+	for (int i = 0; i < num_elements; ++i) {
+		if (countFrequency[i] > mode) mode = countFrequency[i];
+	}
+  return mode;
 }
-
-
-
-
-
-
 
 // Input is the number of elements, followed by that many integers.
 // Writes mode of elements to file specified as first command-line argument.
@@ -46,30 +56,30 @@ int main (int argc,  char* argv[]) {
 
 
 	// Read a set of elements into an array.
-	int n;
-	long *arr;
+	int num_elements;
+	long* set_of_ints;
 
 	// Get the number of elements
 	cout << "Enter the number of elements:" << endl;
-	cin >> n;
+	cin >> num_elements;
 
 	// Create array in dynamic memory.
-	arr = new long[n];
+	set_of_ints = new long[num_elements];
 
-	for (int i=0; i<n; i++) {
+	for (int i=0; i<num_elements; i++) {
 		cout << "Enter a number:" << endl;
-		cin >> arr[i];
+		cin >> set_of_ints[i];
 	}
 
-	long m = mode(arr,n);
+	long mode = getMode(set_of_ints, num_elements);
 
-	cout << "The mode is " << m << endl;
+	cout << "The mode is " << mode << endl;
 
-	outputfile << m << endl;
+	outputfile << mode << endl;
 	outputfile.close();
 
 	// Free up memory.  Note use of delete [], since this is an array.
-	delete [] arr;
+	delete [] set_of_ints;
 
 	return 0;
 }

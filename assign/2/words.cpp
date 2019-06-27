@@ -32,12 +32,16 @@ class FileOpeningException {
 private:
 	string errorMessage;
 public:
-	FileOpeningException(string message) {
-		errorMessage = message;
-	}
-	string getMessage() {
-		return errorMessage;
-	}
+	FileOpeningException(string message) { errorMessage = message; }
+	string getMessage() { return errorMessage; }
+};
+
+class NumWordsException {
+private: 
+	string errorMessage;
+public:
+	NumWordsException(string message) { errorMessage = message; }
+	string getMessage() { return errorMessage; }
 };
 
 string* readWords(string filename, int & arraySize);
@@ -109,8 +113,8 @@ string* readWords(string filename, int & arraySize) {
 
 // Returns true if the string s is in alphabetical order based on ASCII values and false otherwise.
 // Places the number of comparisons made during the call in the reference parameter numComparisons.
-bool isInAlphabeticalOrder(string s, float& numComparisons) {
-	int length = s.size();
+bool isInAlphabeticalOrder(string s, int& numComparisons) {
+	int length = s.length();
 	for (int i = 0; i < length-1; ++i) {
 		++numComparisons;
 		if (s[i] > s[i+1]) return false;
@@ -119,27 +123,30 @@ bool isInAlphabeticalOrder(string s, float& numComparisons) {
 }
 
 // Returns the average number of words present in an array of strings.
-int avgWordLength(string* words, int numWords) {
-	float totalNumChars = 0;
+float avgWordLength(string* words, int numWords) throw(NumWordsException) {
+	if (numWords < 0) throw new NumWordsException("Input array must have a nonnegative number of words");
+	int totalNumChars = 0;
 	for (int i = 0; i < numWords; ++i) {
 		totalNumChars += words[i].length();
 	}
-	return float(totalNumChars / float(numWords));
+	return float(totalNumChars) / float(numWords);
 }
 
 // Returns the average number of comparisons made by isInAlphabeticalOrder().
-int avgCharComparisons(string* words, int numWords) {
-	float numComparisons = 0;
-	float numFunctionCalls = 0;
+float avgCharComparisons(string* words, int numWords) throw(NumWordsException) {
+	if (numWords < 0) throw new NumWordsException("Input array must have a nonnegative number of words");
+	int numComparisons = 0;
+	int numFunctionCalls = 0;
 	for (int i = 0; i < numWords; ++i) {
 		isInAlphabeticalOrder(words[i], numComparisons);
 		++numFunctionCalls;
 	}
-	return float(numComparisons / numFunctionCalls);
+	return float(numComparisons) / float(numFunctionCalls);
 }
 
 // Returns the maximum length of the words contained in the given input array of strings
-int maxWordLength(string* words, int numWords) {
+int maxWordLength(string* words, int numWords) throw(NumWordsException) {
+	if (numWords < 0) throw new NumWordsException("Input array must have a nonnegative number of words");
 	int maxLength = 0;
 	for (int i = 0; i < numWords; ++i) {
 		if (words[i].length() > maxLength) maxLength = words[i].length();
@@ -149,25 +156,26 @@ int maxWordLength(string* words, int numWords) {
 
 // Returns an array avgComparisonsForLength containing the average number of comparisons made by isInAlphabeticalOrder() 
 // with respect to the length of the word string. 
-float* avgComparisonsForLength(string* words, int numWords) {
+float* avgComparisonsForLength(string* words, int numWords) throw(NumWordsException) {
+	if (numWords < 0) throw new NumWordsException("Input array must have a nonnegative number of words");
 	int maxLength = maxWordLength(words, numWords);
 	int numFunctionCallsForLength[maxLength] = {0};  // Count number of calls to isInAlphabeticalOrder() for word of length 'i'.
 	int totalNumComparisonsForLength[maxLength] = {0}; // Count number of comparisons made by isInAlphabeticalOrder() for word of length 'i'.
 
 	for (int i = 0; i < numWords; ++i) {
 		int word_length = words[i].length();
-		if (word_length > 2) { // Word lengths of 0, 1, and 2 have a constant average number of comparisons of 0, 0, and 1 respectively.
+		if (word_length > 2) { // Word lengths of 0, 1, and 2 have an invariant average number of comparisons of 0, 0, and 1 respectively.
 			++numFunctionCallsForLength[word_length]; 
-			float numComparisons = 0; 
+			int numComparisons = 0; 
 			isInAlphabeticalOrder(words[i], numComparisons);
 			totalNumComparisonsForLength[word_length] += numComparisons;
 		}
 	}
 
 	float* avgComparisonsForLength = new float[maxLength+1]; // Using maxLength+1 so that the array index matches the word length.
-	avgComparisonsForLength[0] = 0;
-	avgComparisonsForLength[1] = 0;
-	avgComparisonsForLength[2] = 1;
+	avgComparisonsForLength[0] = 0.0;
+	avgComparisonsForLength[1] = 0.0;
+	avgComparisonsForLength[2] = 1.0;
 	for (int i = 3; i < maxLength; ++i) {
 		avgComparisonsForLength[i] = float(totalNumComparisonsForLength[i]) / float(numFunctionCallsForLength[i]);
 		// Example: called isInAlphabeticalOrder() three times on words of length 5, so numFunctionCallsForLength[5] = 3.
@@ -196,8 +204,12 @@ int main (void) {
 
 
 	// TO DO:: Insert your code here.
-	cout << "Average word length is: " << avg_word_length << endl;
-	cout << "Average number of comparisons made by isInAlphabeticalOrder(): " << avg_num_comparisons << endl;
+	cout << "Avg word length is: " << avg_word_length << endl;
+	cout << "Avg num of comparisons made by isInAlphabeticalOrder(): " << avg_num_comparisons << endl;
+	cout << endl;
+	for (int i = 0; i < max_word_length; ++i) {
+		cout << "Avg comparisons for length " << i << " is: " << avg_comparisons_for_length[i] << endl;
+	}
 
 	// Print average number of comparisons for each length to a file for plotting.
 	writeArray(outputFilename, avg_comparisons_for_length, max_word_length);
@@ -207,3 +219,7 @@ int main (void) {
 	delete[] avg_comparisons_for_length;
 	return 0;
 }
+
+// Notes:
+// - We casted some variables to floats but did not change the return type of the function from int to float, so
+// the returned value remained as an int.
