@@ -36,14 +36,6 @@ public:
 	string getMessage() { return errorMessage; }
 };
 
-class NumWordsException {
-private: 
-	string errorMessage;
-public:
-	NumWordsException(string message) { errorMessage = message; }
-	string getMessage() { return errorMessage; }
-};
-
 string* readWords(string filename, int & arraySize);
 void writeArray(string filename, float *arr, int arraySize) throw (FileOpeningException);
 
@@ -122,9 +114,8 @@ bool isInAlphabeticalOrder(string s, int& numComparisons) {
 	return true;
 }
 
-// Returns the average number of words present in an array of strings.
-float avgWordLength(string* words, int numWords) throw(NumWordsException) {
-	if (numWords < 0) throw new NumWordsException("Input array must have a nonnegative number of words");
+// Returns the average number of words present in the input array of strings.
+float avgWordLength(string* words, int numWords) {
 	int totalNumChars = 0;
 	for (int i = 0; i < numWords; ++i) {
 		totalNumChars += words[i].length();
@@ -133,8 +124,7 @@ float avgWordLength(string* words, int numWords) throw(NumWordsException) {
 }
 
 // Returns the average number of comparisons made by isInAlphabeticalOrder().
-float avgCharComparisons(string* words, int numWords) throw(NumWordsException) {
-	if (numWords < 0) throw new NumWordsException("Input array must have a nonnegative number of words");
+float avgCharComparisons(string* words, int numWords) {
 	int numComparisons = 0;
 	int numFunctionCalls = 0;
 	for (int i = 0; i < numWords; ++i) {
@@ -144,9 +134,8 @@ float avgCharComparisons(string* words, int numWords) throw(NumWordsException) {
 	return float(numComparisons) / float(numFunctionCalls);
 }
 
-// Returns the maximum length of the words contained in the given input array of strings
-int maxWordLength(string* words, int numWords) throw(NumWordsException) {
-	if (numWords < 0) throw new NumWordsException("Input array must have a nonnegative number of words");
+// Returns the maximum length among the words contained in the input array of strings
+int maxWordLength(string* words, int numWords) {
 	int maxLength = 0;
 	for (int i = 0; i < numWords; ++i) {
 		if (words[i].length() > maxLength) maxLength = words[i].length();
@@ -154,33 +143,29 @@ int maxWordLength(string* words, int numWords) throw(NumWordsException) {
 	return maxLength;
 }
 
-// Returns an array avgComparisonsForLength containing the average number of comparisons made by isInAlphabeticalOrder() 
-// with respect to the length of the word string. 
-float* avgComparisonsForLength(string* words, int numWords) throw(NumWordsException) {
-	if (numWords < 0) throw new NumWordsException("Input array must have a nonnegative number of words");
+// Returns an array avgComparisonsForLength containing the average number of comparisons made 
+// by isInAlphabeticalOrder() with respect to the length of the word string. 
+float* avgComparisonsForLength(string* words, int numWords) {
 	int maxLength = maxWordLength(words, numWords);
-	int numFunctionCallsForLength[maxLength] = {0};  // Count number of calls to isInAlphabeticalOrder() for word of length 'i'.
-	int totalNumComparisonsForLength[maxLength] = {0}; // Count number of comparisons made by isInAlphabeticalOrder() for word of length 'i'.
+	int numCallsForLength[maxLength+1] = {0};  // Count number of calls to isInAlphabeticalOrder()by word length.
+											   // Use maxLength+1 so that the array index matches the word length.
+	int totalComparisonsForLength[maxLength+1] = {0}; // Count number of comparisons made by isInAlphabeticalOrder() by word length.
 
 	for (int i = 0; i < numWords; ++i) {
 		int word_length = words[i].length();
-		if (word_length > 2) { // Word lengths of 0, 1, and 2 have an invariant average number of comparisons of 0, 0, and 1 respectively.
-			++numFunctionCallsForLength[word_length]; 
-			int numComparisons = 0; 
-			isInAlphabeticalOrder(words[i], numComparisons);
-			totalNumComparisonsForLength[word_length] += numComparisons;
-		}
+		++numCallsForLength[word_length]; 
+		int numComparisonsForWord = 0; 
+		isInAlphabeticalOrder(words[i], numComparisonsForWord);
+		totalComparisonsForLength[word_length] += numComparisonsForWord;
 	}
 
-	float* avgComparisonsForLength = new float[maxLength+1]; // Using maxLength+1 so that the array index matches the word length.
-	avgComparisonsForLength[0] = 0.0;
-	avgComparisonsForLength[1] = 0.0;
-	avgComparisonsForLength[2] = 1.0;
-	for (int i = 3; i < maxLength; ++i) {
-		avgComparisonsForLength[i] = float(totalNumComparisonsForLength[i]) / float(numFunctionCallsForLength[i]);
-		// Example: called isInAlphabeticalOrder() three times on words of length 5, so numFunctionCallsForLength[5] = 3.
+	float* avgComparisonsForLength = new float[maxLength+1]; 
+	avgComparisonsForLength[0] = 0; // Word of length 0 always takes zero comparisons
+	for (int i = 1; i < maxLength; ++i) {
+		avgComparisonsForLength[i] = float(totalComparisonsForLength[i]) / float(numCallsForLength[i]);
+		// Example: called isInAlphabeticalOrder() three times on words of length 5, so numCallsForLength[5] = 3.
 		// isInAlphabeticalOrder() made 1, 1, and 2 comparisons for each word respectively, so since 1+1+2 = 4,
-		// totalNumComparisonsForLength[5] = 4. Then avgComparisonsForLength[5] = 4/3 = 1.3333...
+		// totalComparisonsForLength[5] = 4. Then avgComparisonsForLength[5] = 4/3 = 1.3333...
 	}
 	return avgComparisonsForLength;
 }
@@ -221,5 +206,5 @@ int main (void) {
 }
 
 // Notes:
-// - We casted some variables to floats but did not change the return type of the function from int to float, so
+// - Casted some variables to floats but did not change the return type of the function from int to float, so
 // the returned value remained as an int.
