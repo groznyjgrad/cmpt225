@@ -15,25 +15,31 @@ using namespace std;
 //  return the mode
 //
 
-long getMode (long* set_of_ints, int num_elements) {
-	// Find maximum value of the input array.
-	int max_value = 0;
-	for (int i = 0; i < num_elements; ++i) {
-		if (set_of_ints[i] > max_value) max_value = set_of_ints[i];
-	}
+// Strategy: consider each element of the array as a candidate mode. After selecting a candidate
+// mode from the array, count its frequency in the array. Then if its frequency is greater than the 
+// frequency of the current mode, replace the current mode with the value of the candidate mode.
+// Therefore, once each element has been considered, the element with the greatest frequency will
+// have been stored and can then be returned as the true mode of the array. 
+long mode (long* arr, int n) {
+	// integer value and frequency of the current mode
+	long current_mode = 0;
+	int current_mode_count = 0;
+	// integer value and frequency of the candidate mode
+	long candidate_mode = 0;
+	int candidate_count = 0;
 
-	// Use an array to count the frequency of each integer number.
-	int countFrequency[max_value];
-	for (int i = 0; i < num_elements; ++i) {
-		int num = set_of_ints[i];
-		++countFrequency[num];
+	for (int i = 0; i < n; ++i) {  // select a candidate mode
+		candidate_mode = arr[i];
+		candidate_count = 0;         // reset count for each candidate mode 
+		for (int j = 0; j < n; ++j) {   // count the frequency of the candidate mode
+			if (arr[j] == candidate_mode) ++candidate_count;
+		}
+		if (candidate_count > current_mode_count) {   // replace current mode 
+			current_mode = candidate_mode;
+			current_mode_count = candidate_count;
+		}
 	}
-
-	long mode = 0;
-	for (int i = 0; i < num_elements; ++i) {
-		if (countFrequency[i] > mode) mode = countFrequency[i];
-	}
-  return mode;
+	return current_mode;
 }
 
 // Input is the number of elements, followed by that many integers.
@@ -56,30 +62,30 @@ int main (int argc,  char* argv[]) {
 
 
 	// Read a set of elements into an array.
-	int num_elements;
-	long* set_of_ints;
+	int n;
+	long* arr;
 
 	// Get the number of elements
 	cout << "Enter the number of elements:" << endl;
-	cin >> num_elements;
+	cin >> n;
 
 	// Create array in dynamic memory.
-	set_of_ints = new long[num_elements];
+	arr = new long[n];
 
-	for (int i=0; i<num_elements; i++) {
+	for (int i=0; i<n; i++) {
 		cout << "Enter a number:" << endl;
-		cin >> set_of_ints[i];
+		cin >> arr[i];
 	}
 
-	long mode = getMode(set_of_ints, num_elements);
+	long m = mode(arr, n);
 
-	cout << "The mode is " << mode << endl;
+	cout << "The mode is " << m << endl;
 
-	outputfile << mode << endl;
+	outputfile << m << endl;
 	outputfile.close();
 
 	// Free up memory.  Note use of delete [], since this is an array.
-	delete [] set_of_ints;
+	delete [] arr;
 
 	return 0;
 }
