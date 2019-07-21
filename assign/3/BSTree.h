@@ -38,6 +38,8 @@ public:
 	void inOrderPrint();
 
 private:
+	Node* root;
+	int size;
 };
 
 #endif /* BSTREE_H_ */

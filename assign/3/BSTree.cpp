@@ -8,9 +8,11 @@
 #include "BSTree.h"
 
 
-BSTree::BSTree() {
-}
+BSTree::BSTree() : root(NULL), size() {}
 
+BSTree::BSTree(const BSTree& copy_tree) {
+// some kind of traversal of the copy_tree to reproduce that tree as a deep copy
+}
 
 BSTree::~BSTree() {
 }
