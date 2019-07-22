@@ -15,11 +15,13 @@ using namespace std;
 class BSTree {
 public:
 	BSTree();
-	BSTree(const BSTree & rbt); // Copy constructor
+	BSTree(const BSTree& copy_tree); // Copy constructor
 	virtual ~BSTree();
 
+	Node* getRoot();
+
 	// Creates and inserts a new customer (with the data shown in the parameters) in the tree, in a new tree node.
-	bool insert(string, char, int);
+	bool insert(string input_name, char input_initial, int input_balance);
 
 	// Deletes the first node with a matching name and initial from the tree.
 	// Returns true if the deletion was successful (that is, if the customer was found).
@@ -38,8 +40,14 @@ public:
 	void inOrderPrint();
 
 private:
+	Node* insertHelper(Node* node, const Customer& insert_customer);
+	Node* copyHelper(const Node* to_copy);
 	Node* root;
 	int size;
 };
 
 #endif /* BSTREE_H_ */
+
+// It seems like the tree should be ordered with respect to ASCII value, since most of the functions 
+// take the name and initial as parameters, so we would want to quickly traverse the tree using the
+// order of the name. 

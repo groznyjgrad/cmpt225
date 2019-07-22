@@ -9,30 +9,20 @@
 #define NODE_H_
 
 #include "Customer.h"
-#include <list>
 
 class Node {
+friend class BSTree;
 public:
-	Customer customer;
-	Node* parent;
-	Node* left;
-	Node* right;
-	Node() : customer(), parent(NULL), left(NULL), right(NULL) {}
-};
-
-class Position {
-public:
-	Position(Node* input_node = NULL);
-	Customer& operator*(); 
-	Position left() const;
-	Position right() const;
-	Position parent() const;
-	bool isRoot() const;
-	bool isExternal() const;
+	Node() : customer_(), parent_(NULL), left_(NULL), right_(NULL) {}
+	Node* left() const { return left_; }
+	Node* right() const { return right_; }
+	Node* parent() const { return parent_; }
 private:
-	Node* node; 
+	Customer customer_;
+	Node* parent_;
+	Node* left_;
+	Node* right_;
 };
-typedef std::list<Position> PositionList;
 
 #endif /* NODE_H_ */
 

@@ -16,6 +16,8 @@ class Customer {
 public:
 	Customer();
 	Customer(string input_name, char input_initial, int input_balance);
+	Customer(const Customer& customer);
+	void operator=(const Customer& customer);
 	const string& getName() const;
 	const char& getInitial() const;
 	const int& getBalance() const;
@@ -30,7 +32,7 @@ public:
 
 
 private:
-	friend ostream& operator<<(ostream& output, const Customer& customer);
+	friend ostream& operator<<(ostream& output, Customer& customer);
 	string name;
 	char initial;
 	int balance;
