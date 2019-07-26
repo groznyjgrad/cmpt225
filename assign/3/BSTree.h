@@ -26,15 +26,15 @@ public:
 	// Deletes the first node with a matching name and initial from the tree.
 	// Returns true if the deletion was successful (that is, if the customer was found).
 	// Note that two customers are equal if they have the same name and initial, regardless of the account balance.
-	bool remove(string, char);
+	bool remove(string input_name, char input_initial);
 
 	//  Searches the tree for the given value, returning true if the customer is found
-	bool search(string, char);
+	bool search(string input_name, char input_initial);
 
 	// Returns a vector of Customers where the customer names (initial and last name)
 	// are in the range specified in the parameters.  For example rangeSearch("Dobbs", 'A', "Fogg", D)
 	// returns all customers whose names are between Dobbs A and Fogg D.
-	vector<Customer> rangeSearch(string, char, string , char);
+	vector<Customer> rangeSearch(string start_name, char start_initial, string end_name, char end_initial);
 
 	// Prints the contents of the tree in sorted order.
 	void inOrderPrint();
@@ -42,6 +42,12 @@ public:
 private:
 	Node* insertHelper(Node* node, const Customer& insert_customer);
 	Node* copyHelper(const Node* to_copy);
+	Node* removeHelper(Node* node, const Customer& remove_customer, bool& found);
+	bool searchHelper(Node* node, const Customer& find_customer);
+	void rangeSearchHelper (Node* node, vector<Customer>& range_customers, 
+																			const Customer& start_customer,
+																			const Customer& end_customer);
+	void printHelper(Node* node);
 	Node* root;
 	int size;
 };

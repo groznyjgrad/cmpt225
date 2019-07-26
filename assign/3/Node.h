@@ -13,10 +13,11 @@
 class Node {
 friend class BSTree;
 public:
-	Node() : customer_(), parent_(NULL), left_(NULL), right_(NULL) {}
-	Node* left() const { return left_; }
-	Node* right() const { return right_; }
-	Node* parent() const { return parent_; }
+	Node();
+	bool isExternal() const;
+	bool hasOneChild() const;
+	bool isRoot() const;
+	void setParentTo(Node* input_parent);
 private:
 	Customer customer_;
 	Node* parent_;
@@ -25,4 +26,3 @@ private:
 };
 
 #endif /* NODE_H_ */
-

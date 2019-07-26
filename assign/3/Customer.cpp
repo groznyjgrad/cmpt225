@@ -8,8 +8,8 @@
 #include "Customer.h"
 
 Customer::Customer()
-: name(NULL),
-  initial(NULL),
+: name(),
+  initial(),
   balance(0) {}
 
 Customer::Customer(string input_name, char input_initial, int input_balance)
@@ -22,10 +22,13 @@ Customer::Customer(const Customer& customer)
   initial(customer.getInitial()),
   balance(customer.getBalance()) {}
 
-void Customer::operator=(const Customer& other_customer) {
-	name = other_customer.getName();
-	initial = other_customer.getInitial();
-	balance = other_customer.getBalance();
+Customer& Customer::operator=(const Customer& other_customer) {
+	if (this != &other_customer) {
+		name = other_customer.getName();
+ 		initial = other_customer.getInitial();
+		balance = other_customer.getBalance();
+	}
+	return *this;
 }
 
 const string& Customer::getName() const { return name; }
@@ -34,7 +37,7 @@ const char& Customer::getInitial() const { return initial; }
 
 const int& Customer::getBalance() const { return balance; }
 
-void Customer::setBalance(int input_balance) { balance = input_balance; }
+void Customer::setBalance(const int input_balance) { balance = input_balance; }
 
 bool Customer::operator<(const Customer& customer) const {
 	if (name != customer.getName()) return (name < customer.getName());

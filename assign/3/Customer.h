@@ -17,11 +17,11 @@ public:
 	Customer();
 	Customer(string input_name, char input_initial, int input_balance);
 	Customer(const Customer& customer);
-	void operator=(const Customer& customer);
+	Customer& operator=(const Customer& customer);
 	const string& getName() const;
 	const char& getInitial() const;
 	const int& getBalance() const;
-	void setBalance(int input_balance);
+	void setBalance(const int input_balance);
 
 	bool operator<(const Customer& customer) const;
 	bool operator<=(const Customer& customer) const;
