@@ -15,13 +15,13 @@ using namespace std;
 class Customer {
 public:
 	Customer();
-	Customer(string input_name, char input_initial, int input_balance);
+	Customer(string input_name, char input_initial, int input_account);
 	Customer(const Customer& customer);
 	Customer& operator=(const Customer& customer);
 	const string& getName() const;
 	const char& getInitial() const;
-	const int& getBalance() const;
-	void setBalance(const int input_balance);
+	const int& getAccount() const;
+	void setAccount(const int input_account);
 
 	bool operator<(const Customer& customer) const;
 	bool operator<=(const Customer& customer) const;
@@ -29,13 +29,11 @@ public:
 	bool operator>=(const Customer& customer) const;
 	bool operator==(const Customer& customer) const;
 	bool operator!=(const Customer& customer) const;
-
-
 private:
 	friend ostream& operator<<(ostream& output, Customer& customer);
 	string name;
 	char initial;
-	int balance;
+	int account;
 };
 
 #endif /* CUSTOMER_H_ */

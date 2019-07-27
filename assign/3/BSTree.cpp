@@ -7,7 +7,6 @@
 
 #include "BSTree.h"
 #include "Node.h"
-#define DEBUG 1
 
 BSTree::BSTree() : root(nullptr), size(0) {}
 
@@ -30,9 +29,17 @@ Node* BSTree::copyHelper(const Node* to_copy) {
 // is empty, creates an empty tree.
 BSTree::BSTree(const BSTree& copy_tree) : root(copyHelper(copy_tree.root)), size(copy_tree.size) {}
 
+// Deletes the tree through deleting each node by post-order.
+void BSTree::deleteHelper(Node* node) {
+	if (node == nullptr) return;
+	deleteHelper(node->left_);
+	deleteHelper(node->right_);
+	delete node;
+}
+
+// Calls deleteHelper to delete the tree.
 BSTree::~BSTree() {
-// Probably use another helper method to do post-order traversal and delete 
-// the Customer objects followed by the Node objects
+	deleteHelper(root);
 }
 
 // Recursively traverses a tree according to Customer object comparisons until
@@ -53,15 +60,15 @@ Node* BSTree::insertHelper(Node* node, const Customer& insert_customer) {
 		node->right_ = insertHelper(node->right_, insert_customer);
 		node->right_->setParentTo(node);
 	}
-	else node->customer_.setBalance(insert_customer.getBalance()); // Customer already exists.
+	else node->customer_.setAccount(insert_customer.getAccount()); // Customer already exists.
 	return node;
 }
 
 // Uses the insertHelper method to insert a new Customer into the tree. 
 // If the tree is empty, sets the root to a new node with the given Customer object data.
-// If the Customer already exists, their balance is updated.
-bool BSTree::insert(string input_name, char input_initial, int input_balance) {
-	Customer insert_customer(input_name, input_initial, input_balance); 
+// If the Customer already exists, their account is updated.
+bool BSTree::insert(string input_name, char input_initial, int input_account) {
+	Customer insert_customer(input_name, input_initial, input_account); 
 	root = insertHelper(root, insert_customer);
 	++size;
 }
@@ -109,7 +116,7 @@ Node* BSTree::removeHelper(Node* node, const Customer& remove_customer, bool& fo
 // Calls removeHelper to find and remove the Customer object with name 'input_name' and
 // initial 'input_initial'. If the Customer is found and removed, returns true, otherwise returns false.
 bool BSTree::remove(string input_name, char input_initial) {
-	Customer remove_customer(input_name, input_initial, 0);  // Balance value does not affect comparison.
+	Customer remove_customer(input_name, input_initial, 0);  // Account value does not affect comparison.
 	bool found = false;
 	root = removeHelper(root, remove_customer, found);
   return found;
@@ -144,11 +151,11 @@ void BSTree::rangeSearchHelper (Node* node, vector<Customer>& range_customers,
 // Calls rangeSearchHelper to search through the tree for Customers between and including the input name
 // and initials. Returns a vector containing any such Customers.
 vector<Customer> BSTree::rangeSearch(string start_name, char start_initial, string end_name, char end_initial) {
-	vector<Customer>* range_customers = new vector<Customer>;
+	vector<Customer> range_customers;
 	Customer start_customer(start_name, start_initial, 0);
 	Customer end_customer(end_name, end_initial, 0);
-	rangeSearchHelper(root, *range_customers, start_customer, end_customer);
-	return *range_customers;
+	rangeSearchHelper(root, range_customers, start_customer, end_customer);
+	return range_customers;
 }
 
 // Traverses tree inorder and prints Customer object data to cout.
